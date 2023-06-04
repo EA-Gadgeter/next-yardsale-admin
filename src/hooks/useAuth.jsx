@@ -1,5 +1,7 @@
 import { useState, useContext, createContext } from "react";
 
+import endPoints from "../services/api";
+
 import Cookie from "js-cookie";
 import axios from "axios";
 
@@ -9,7 +11,24 @@ const useAuthProvide = () => {
   const [user, setUser] = useState(null);
 
   const signIn = async (email, password) => {
-    setUser("login");
+    const options = {
+      headers: {
+        accept: "*/*",
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data: authData } = await axios.post(endPoints.auth.login, { email, password }, options);
+
+    if (authData) {
+      const token = authData.access_token;
+      Cookie.set("token", token, { expires: 5 });
+
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+      const { data: userData } = await axios.get(endPoints.auth.profile);
+      setUser(userData);
+    }
   };
 
   return { user, signIn };

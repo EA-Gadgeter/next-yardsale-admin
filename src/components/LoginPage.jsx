@@ -1,15 +1,39 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/solid";
 
+import { useAuth } from "../hooks/useAuth";
+
 export default function LoginPage() {
+  const [errorLogin, setErrorLogin] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+
+  const { signIn } = useAuth();
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+
+    setErrorLogin(null);
+    setLoading(true);
+
+    signIn(email, password)
+      .then(() => console.log("SUCCESS"))
+      .catch((error) => {
+        if (error.response.status === 401) {
+          setErrorLogin("Email or password incorrect.");
+        } else if (error.request) {
+          setErrorLogin("Internal error. Please try later.");
+        } else {
+          setErrorLogin("Something went wrong.");
+        }
+      });
+
+    setLoading(false);
   };
 
   return (
@@ -73,15 +97,27 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
+                disabled={loading}
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                   <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
                 </span>
                 Sign in
+                {loading && (
+                  <span className="flex absolute h-4 w-4 top-0 right-0 -mt-1 -mr-1">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-300 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-4 w-4 bg-indigo-400"></span>
+                  </span>
+                )}
               </button>
             </div>
           </form>
+          {errorLogin && (
+            <div className="p-3 mb-3 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+              <span className="font-medium">Error!</span> {errorLogin}
+            </div>
+          )}
         </div>
       </div>
     </>
