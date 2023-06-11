@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useRouter } from "next/router";
 import { LockClosedIcon } from "@heroicons/react/solid";
 
 import { useAuth } from "../hooks/useAuth";
@@ -9,6 +10,7 @@ export default function LoginPage() {
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const router = useRouter();
 
   const { signIn } = useAuth();
 
@@ -22,7 +24,7 @@ export default function LoginPage() {
     setLoading(true);
 
     signIn(email, password)
-      .then(() => console.log("SUCCESS"))
+      .then(() => router.push("/dashboard"))
       .catch((error) => {
         if (error.response.status === 401) {
           setErrorLogin("Email or password incorrect.");
