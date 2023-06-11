@@ -5,7 +5,7 @@ import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useAuth } from "../hooks/useAuth";
 
 const navigation = [
-  { name: "Dashboard", href: "#", current: true },
+  { name: "Dashboard", href: "/dashboard", current: true },
   { name: "Products", href: "/dashboard/products/", current: false },
   { name: "Sells", href: "#", current: false },
 ];

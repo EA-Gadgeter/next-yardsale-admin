@@ -9,12 +9,9 @@ import Alert from "../../common/Alert";
 import endPoints from "../../services/api";
 
 import { useAlert } from "../../hooks/useAlert";
+import { deleteProduct } from "../../services/api/products";
 
 const PRODUCTS_LIMIT = 50;
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const Products = () => {
   const [open, setOpen] = useState(false);
@@ -33,6 +30,17 @@ const Products = () => {
       console.error(error);
     }
   }, [alert]);
+
+  const handleDelete = (id) => {
+    deleteProduct(id).then((response) => {
+      setAlert({
+        active: true,
+        message: "Delete product successfully",
+        type: "error",
+        autoClose: true,
+      });
+    });
+  };
 
   return (
     <>
@@ -105,7 +113,9 @@ const Products = () => {
                         <button className="text-indigo-600 hover:text-indigo-900">Edit</button>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button className="text-indigo-600 hover:text-indigo-900">Delete</button>
+                        <button className="text-indigo-600 hover:text-indigo-900" onClick={() => handleDelete(product.id)}>
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}

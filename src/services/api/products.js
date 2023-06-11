@@ -14,7 +14,7 @@ const addProduct = async (body) => {
 };
 
 const deleteProduct = async (id) => {
-  const response = await axios.post(endPoints.products.deleteProduct(id));
+  const response = await axios.delete(endPoints.products.deleteProduct(id));
   return response.data;
 };
 
