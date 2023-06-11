@@ -31,7 +31,13 @@ const useAuthProvide = () => {
     }
   };
 
-  return { user, signIn };
+  const logOut = () => {
+    Cookie.remove("token");
+    delete axios.defaults.headers.common.Authorization;
+    setUser(null);
+  };
+
+  return { user, signIn, logOut };
 };
 
 const AuthProvider = ({ children }) => {

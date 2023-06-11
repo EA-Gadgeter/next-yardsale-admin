@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { PlusIcon } from "@heroicons/react/solid";
+import Link from "next/link";
 import axios from "axios";
 
 import Modal from "../../common/Modal";
@@ -32,7 +33,7 @@ const Products = () => {
   }, [alert]);
 
   const handleDelete = (id) => {
-    deleteProduct(id).then((response) => {
+    deleteProduct(id).then(() => {
       setAlert({
         active: true,
         message: "Delete product successfully",
@@ -110,7 +111,9 @@ const Products = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.id}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button className="text-indigo-600 hover:text-indigo-900">Edit</button>
+                        <Link href={`/dashboard/edit/${product.id}`}>
+                          <span className="text-indigo-600 hover:text-indigo-900 cursor-pointer">Edit</span>
+                        </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button className="text-indigo-600 hover:text-indigo-900" onClick={() => handleDelete(product.id)}>
